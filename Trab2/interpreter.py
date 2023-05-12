@@ -12,15 +12,17 @@ class Interpreter:
         left_value = self.interpret(node.left)
         right_value = self.interpret(node.right)
 
-        if operator == '+':
+        if operator.name == 'OpSum':
             return left_value + right_value
-        elif operator == '-':
+        elif operator.name == 'OpMinus':
             return left_value - right_value
-        elif operator == '*':
+        elif operator.name == 'OpMult':
             return left_value * right_value
-        elif operator == '/':
+        elif operator.name == 'OpDiv':
             return left_value / right_value
-        elif operator == '^':
+        elif operator.name == 'OpMod':
+            return left_value % right_value
+        elif operator.name == 'OpPow':
             return left_value ** right_value
         else:
             raise Exception(f'Invalid operator: {operator}')

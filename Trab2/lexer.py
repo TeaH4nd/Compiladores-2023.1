@@ -7,6 +7,7 @@ class TokenType(Enum):
     TokNumHex = 2
     TokOp = 3
     TokEOF = 4
+    TokLParen = 5
 
 class OpType(Enum):
     OpSum = 1
