@@ -1,0 +1,10 @@
+// comentario
+
+10*5+3
+/*ignorado */
+/* 
+    comentario
+    em 
+    bloco
+*/
+2+2-3
