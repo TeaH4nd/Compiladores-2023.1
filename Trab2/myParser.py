@@ -3,43 +3,40 @@ from lexer import TokenType
 class Parser:
     def __init__(self, lexer):
         self.lexer = lexer
-        self.current_token = self.lexer.next()
+        self.currentToken = self.lexer.next()
+
+    def error(self, message):
+        raise Exception(message)
+
+    def consume(self, tokenType):
+        if self.currentToken.tokenType == tokenType:
+            self.currentToken = self.lexer.next()
+        else:
+            self.error(f"Expected token {tokenType}, but found {self.currentToken.tokenType}")
 
     def parse(self):
-        return self.expression()
+        # self.currentToken = self.lexer.next()
+        return self.parse_e()
 
-    def expression(self):
-        if self.current_token.tokenType == TokenType.TokNumDec:
-            node = self.number()
-        elif self.current_token.tokenType == TokenType.LEFT_PAREN:
-            node = self.parenthesized_expression()
+    def parse_e(self):
+        if self.currentToken.tokenType in (TokenType.TokNumDec, TokenType.TokNumHex):
+            node = NumberNode(self.currentToken.value)
+            self.consume(self.currentToken.tokenType)
+            return node
+        elif self.currentToken.tokenType == TokenType.TokLParen:
+            self.consume(TokenType.TokLParen)
+            node = self.parse_e()
+            self.consume(TokenType.TokRParen)
+            return node
+        elif self.currentToken.tokenType == TokenType.TokOp:
+            op = self.currentToken.value
+            self.consume(TokenType.TokOp)
+            left = self.parse_e()
+            right = self.parse_e()
+            return BinaryOperationNode(op, left, right)
         else:
-            node = self.operator_expression()
-        return node
+            self.error(f"Invalid token {self.currentToken.tokenType}")
 
-    def parenthesized_expression(self):
-        self.consume(TokenType.LEFT_PAREN)
-        node = self.expression()
-        self.consume(TokenType.RIGHT_PAREN)
-        return node
-
-    def operator_expression(self):
-        operator = self.consume(TokenType.OPERATOR)
-        left = self.expression()
-        right = self.expression()
-        return BinaryOperationNode(operator.value, left, right)
-
-    def number(self):
-        number = self.consume(TokenType.TokNumDec)
-        return NumberNode(number.value)
-
-    def consume(self, expected_type):
-        if self.current_token.tokenType == expected_type:
-            token = self.current_token
-            self.current_token = self.lexer.next()
-            return token
-        else:
-            raise Exception(f'Expected {expected_type}, found {self.current_token.tokenType}')
 
 class BinaryOperationNode:
     def __init__(self, operator, left, right):

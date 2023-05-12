@@ -19,8 +19,8 @@ def main():
         # Criação do parser
         parser = Parser(lexer)
 
-        if parser.current_token:
-            if parser.current_token.tokenType == TokenType.TokEOF:
+        if parser.currentToken:
+            if parser.currentToken.tokenType == TokenType.TokEOF:
                 print('End of File.')
                 break
             try:
