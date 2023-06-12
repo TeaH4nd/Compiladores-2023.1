@@ -7,6 +7,10 @@
     em 
     bloco
 */
-+ - 2 2 3
++ - 2 2 3 // depois da expressao
 
-+ 5 * 5 2
++ 5 * /* no meio */ 5 2
+
+* - + 2 2 4 / 6 ^ 3 1 
+
+- ( + 2 2 ) 4

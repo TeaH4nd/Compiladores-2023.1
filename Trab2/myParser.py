@@ -1,3 +1,19 @@
+'''
+Trabalho desenvolvido para a aula de Compiladores - UFRJ
+
+Analisador léxico e sintático para uma linguagem de expressões aritméticas prefixadas, com os seguintes elementos léxicos:
+
+- Números em hexadecimal (0xABCDEF0123456789)
+- Números em decimal
+- Operadores: + - * / % ^
+- Espaços em branco (espaço, tab, quebras de linha, etc)
+- Comentário de linha: //
+- Comentário de bloco: /* */
+
+Alexandre A. Chamon
+116142976
+'''
+
 from lexer import TokenType
 
 class Parser:

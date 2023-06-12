@@ -1,3 +1,19 @@
+'''
+Trabalho desenvolvido para a aula de Compiladores - UFRJ
+
+Analisador léxico e sintático para uma linguagem de expressões aritméticas prefixadas, com os seguintes elementos léxicos:
+
+- Números em hexadecimal (0xABCDEF0123456789)
+- Números em decimal
+- Operadores: + - * / % ^
+- Espaços em branco (espaço, tab, quebras de linha, etc)
+- Comentário de linha: //
+- Comentário de bloco: /* */
+
+Alexandre A. Chamon
+116142976
+'''
+
 import sys
 
 from enum import Enum
@@ -8,6 +24,7 @@ class TokenType(Enum):
     TokOp = 3
     TokEOF = 4
     TokLParen = 5
+    TokRParen = 6
 
 class OpType(Enum):
     OpSum = 1
@@ -79,6 +96,12 @@ class Lexer:
             if self.line[self.currentChar] == '^':
                 self.currentChar += 1
                 return Token(TokenType.TokOp, OpType.OpPow)
+            if self.line[self.currentChar] == '(':
+                self.currentChar += 1
+                return Token(TokenType.TokLParen, '(')
+            if self.line[self.currentChar] == ')':
+                self.currentChar += 1
+                return Token(TokenType.TokRParen, ')')
             if self.line[self.currentChar].isdigit():
                 start = self.currentChar
                 is_hex = False

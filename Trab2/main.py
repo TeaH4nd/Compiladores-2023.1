@@ -1,3 +1,23 @@
+'''
+Trabalho desenvolvido para a aula de Compiladores - UFRJ
+
+Analisador léxico e sintático para uma linguagem de expressões aritméticas prefixadas, com os seguintes elementos léxicos:
+
+- Números em hexadecimal (0xABCDEF0123456789)
+- Números em decimal
+- Operadores: + - * / % ^
+- Espaços em branco (espaço, tab, quebras de linha, etc)
+- Comentário de linha: //
+- Comentário de bloco: /* */
+
+* Entrada: uma expressão aritmética prefixada
+* Saida: um número com o resultado da expressão aritmética
+
+
+Alexandre A. Chamon
+116142976
+'''
+
 import sys
 
 from lexer import Lexer, TokenType
@@ -5,10 +25,13 @@ from myParser import Parser
 from interpreter import Interpreter
 
 def main():
+    print('Digite \'q\' para sair!')
     while True:
         # Leitura da expressão aritmética prefixada a partir da entrada padrão
         try:
             expression = input()
+            if expression == 'q':
+                break
         except EOFError as e:
             expression = None
         # expression = sys.stdin.readline()
