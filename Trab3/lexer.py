@@ -15,6 +15,7 @@ class TokenType(Enum):
     TokElse = 11
     TokElif = 12
     TokNome = 13
+    TokSemicolon = 14
 
 class OpType(Enum):
     OpSum = 1
@@ -31,6 +32,7 @@ class OpType(Enum):
     OpGreater = 12
     OpLessOrEquals = 13
     OpGreaterOrEquals = 14
+    OpAssign = 15
 
 class Token:
     def __init__(self, tokenType, value):
@@ -75,7 +77,7 @@ class Lexer:
                     self.currentChar += 2
                     while True:
                         if not self.line:
-                                raise Exception("Unterminated comment block")
+                            raise Exception("Unterminated comment block")
                         if '*/' in self.line[self.currentChar:]:
                             self.currentChar = self.line.index('*/', self.currentChar) + 2
                             break
@@ -100,6 +102,9 @@ class Lexer:
             if self.line[self.currentChar] == ')':
                 self.currentChar += 1
                 return Token(TokenType.TokRParen, None)
+            if self.line[self.currentChar] == ';':
+                self.currentChar += 1
+                return Token(TokenType.TokSemicolon, None)
             if self.line[self.currentChar].isdigit():
                 # check if decimal or hexadecimal number
                 start = self.currentChar
@@ -132,5 +137,40 @@ class Lexer:
                     return Token(TokenType.TokElif, None)
                 else:
                     return Token(TokenType.TokNome, name)
+            if self.line[self.currentChar] == '&':
+                self.currentChar += 1
+                return Token(TokenType.TokOp, OpType.OpAnd)
+            if self.line[self.currentChar] == '|':
+                self.currentChar += 1
+                return Token(TokenType.TokOp, OpType.OpOr)
+            if self.line[self.currentChar] == '=':
+                self.currentChar += 1
+                if self.currentChar < len(self.line) and self.line[self.currentChar] == '=':
+                    self.currentChar += 1
+                    return Token(TokenType.TokOp, OpType.OpEquals)
+                else:
+                    return Token(TokenType.TokOp, OpType.OpAssign)
+            if self.line[self.currentChar] == '!':
+                self.currentChar += 1
+                if self.currentChar < len(self.line) and self.line[self.currentChar] == '=':
+                    self.currentChar += 1
+                    return Token(TokenType.TokOp, OpType.OpNotEquals)
+                else:
+                    raise Exception("Invalid character: !")
+            if self.line[self.currentChar] == '<':
+                self.currentChar += 1
+                if self.currentChar < len(self.line) and self.line[self.currentChar] == '=':
+                    self.currentChar += 1
+                    return Token(TokenType.TokOp, OpType.OpLessOrEquals)
+                else:
+                    return Token(TokenType.TokOp, OpType.OpLess)
+            if self.line[self.currentChar] == '>':
+                self.currentChar += 1
+                if self.currentChar < len(self.line) and self.line[self.currentChar] == '=':
+                    self.currentChar += 1
+                    return Token(TokenType.TokOp, OpType.OpGreaterOrEquals)
+                else:
+                    return Token(TokenType.TokOp, OpType.OpGreater)
             raise Exception(f"Invalid character: {self.line[self.currentChar]}")
         return Token(TokenType.TokEOF, None)
+
