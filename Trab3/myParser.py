@@ -37,14 +37,14 @@ class Parser:
             self.consume(TokenType.TokVar)
             name = self.currentToken.value
             self.consume(TokenType.TokNome)
-            self.consume(TokenType.TokEqual)
+            self.consume(TokenType.TokOp)
             exp = self.parseExp()
             self.consume(TokenType.TokSemicolon)
             return VariableDeclarationNode(name, exp)
         elif self.currentToken.tokenType == TokenType.TokNome:
             name = self.currentToken.value
             self.consume(TokenType.TokNome)
-            self.consume(TokenType.TokEqual)
+            self.consume(TokenType.TokOp)
             exp = self.parseExp()
             self.consume(TokenType.TokSemicolon)
             return VariableAssignmentNode(name, exp)
@@ -107,7 +107,7 @@ class Parser:
     def parseE3(self):
         e3 = self.parseE4()
         while self.currentToken.tokenType == TokenType.TokOp and self.currentToken.value in (
-                OpType.OpEqual, OpType.OpNotEqual, OpType.OpLessThan, OpType.OpGreaterThan, OpType.OpLessThanOrEqual,
+                OpType.OpEquals, OpType.OpNotEquals, OpType.OpLessThan, OpType.OpGreaterThan, OpType.OpLessThanOrEqual,
                 OpType.OpGreaterThanOrEqual):
             op = self.currentToken.value
             self.consume(TokenType.TokOp)
@@ -117,7 +117,7 @@ class Parser:
 
     def parseE4(self):
         e4 = self.parseE5()
-        while self.currentToken.tokenType == TokenType.TokOp and self.currentToken.value in (OpType.OpPlus, OpType.OpMinus):
+        while self.currentToken.tokenType == TokenType.TokOp and self.currentToken.value in (OpType.OpSum, OpType.OpMinus):
             op = self.currentToken.value
             self.consume(TokenType.TokOp)
             e5 = self.parseE5()

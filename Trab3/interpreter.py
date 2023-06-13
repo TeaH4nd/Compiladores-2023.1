@@ -7,8 +7,17 @@ class Interpreter:
         self.variables = {}
 
     def interpret(self, node):
+        if isinstance(node, list):
+            for n in node:
+                return self.verify_node(n)
+        else:
+            return self.verify_node(node)
+                
+    def verify_node(self, node):
         if isinstance(node, PrintCommandNode):
             return self.interpret_print(node)
+        elif isinstance(node, VariableNode):
+            return self.interpret_var(node)
         elif isinstance(node, VariableDeclarationNode):
             return self.interpret_var_declaration(node)
         elif isinstance(node, VariableAssignmentNode):
@@ -28,13 +37,16 @@ class Interpreter:
         value = self.interpret(node.expression)
         print(value)
 
+    def interpret_var(self, node):
+        return self.variables[node.name]
+
     def interpret_var_declaration(self, node):
-        var_name = node.variable_name
+        var_name = node.name
         var_value = self.interpret(node.expression)
         self.variables[var_name] = var_value
 
     def interpret_assignment(self, node):
-        var_name = node.variable_name
+        var_name = node.name
         var_value = self.interpret(node.expression)
         self.variables[var_name] = var_value
 
@@ -56,31 +68,31 @@ class Interpreter:
         left_value = self.interpret(node.left)
         right_value = self.interpret(node.right)
 
-        if node.operator == '+':
+        if node.operator == OpType.OpSum:
             return left_value + right_value
-        elif node.operator == '-':
+        elif node.operator == OpType.OpMinus:
             return left_value - right_value
-        elif node.operator == '*':
+        elif node.operator == OpType.OpMult:
             return left_value * right_value
-        elif node.operator == '/':
+        elif node.operator == OpType.OpDiv:
             return left_value / right_value
-        elif node.operator == '^':
+        elif node.operator == OpType.OpPow:
             return left_value ** right_value
-        elif node.operator == '==':
+        elif node.operator == OpType.OpEquals:
             return int(left_value == right_value)
-        elif node.operator == '!=':
+        elif node.operator == OpType.OpNotEquals:
             return int(left_value != right_value)
-        elif node.operator == '<':
+        elif node.operator == OpType.OpLess:
             return int(left_value < right_value)
-        elif node.operator == '>':
+        elif node.operator == OpType.OpGreater:
             return int(left_value > right_value)
-        elif node.operator == '<=':
+        elif node.operator == OpType.OpLessOrEquals:
             return int(left_value <= right_value)
-        elif node.operator == '>=':
+        elif node.operator == OpType.OpGreaterOrEquals:
             return int(left_value >= right_value)
-        elif node.operator == 'and':
+        elif node.operator == OpType.OpAnd:
             return int(left_value and right_value)
-        elif node.operator == 'or':
+        elif node.operator == OpType.OpOr:
             return int(left_value or right_value)
         else:
             raise Exception(f'Operador inválido: {node.operator}')
