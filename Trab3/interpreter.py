@@ -26,8 +26,8 @@ class Interpreter:
             return self.interpret_while(node)
         elif isinstance(node, IfStatementNode):
             return self.interpret_if(node)
-        elif isinstance(node, ElseStatementNode):
-            return self.interpret_block(node)
+        # elif isinstance(node, ElseStatementNode):
+        #     return self.interpret_else(node)
         elif isinstance(node, NumberNode):
             return node.value
         elif isinstance(node, BinaryOperationNode):
@@ -59,10 +59,13 @@ class Interpreter:
             self.interpret(node.block)
 
     def interpret_if(self, node):
-        if self.interpret(node.condition):
+        if node.condition:
+            if self.interpret(node.condition):
+                self.interpret(node.block)
+            elif node.else_statement:
+                self.interpret(node.else_statement)
+        else:
             self.interpret(node.block)
-        elif node.else_block:
-            self.interpret(node.else_block)
 
     def interpret_block(self, node):
         for cmd in node.commands:

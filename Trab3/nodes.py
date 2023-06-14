@@ -41,9 +41,3 @@ class IfStatementNode:
         self.condition = condition
         self.block = block
         self.else_statement = else_statement
-
-class ElseStatementNode:
-    def __init__(self, condition, block, else_statement=None):
-        self.condition = condition
-        self.block = block
-        self.else_statement = else_statement

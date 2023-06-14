@@ -72,13 +72,13 @@ class Parser:
         if self.currentToken.tokenType == TokenType.TokElse:
             self.consume(TokenType.TokElse)
             block = self.parseBlock()
-            return ElseStatementNode(None, block)
+            return IfStatementNode(None, block)
         elif self.currentToken.tokenType == TokenType.TokElif:
             self.consume(TokenType.TokElif)
             condition = self.parseExp()
             block = self.parseBlock()
             elses = self.parseElses()
-            return ElseStatementNode(condition, block, elses)
+            return IfStatementNode(condition, block, elses)
         else:
             return None
 
@@ -107,8 +107,8 @@ class Parser:
     def parseE3(self):
         e3 = self.parseE4()
         while self.currentToken.tokenType == TokenType.TokOp and self.currentToken.value in (
-                OpType.OpEquals, OpType.OpNotEquals, OpType.OpLessThan, OpType.OpGreaterThan, OpType.OpLessThanOrEqual,
-                OpType.OpGreaterThanOrEqual):
+                OpType.OpEquals, OpType.OpNotEquals, OpType.OpLess, OpType.OpGreater, OpType.OpLessOrEquals,
+                OpType.OpGreaterOrEquals):
             op = self.currentToken.value
             self.consume(TokenType.TokOp)
             e4 = self.parseE4()
