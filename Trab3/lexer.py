@@ -56,7 +56,7 @@ class Lexer:
         if not self.line:
             return Token(TokenType.TokEOF, None)
         while self.currentChar < len(self.line):
-            if self.line[self.currentChar].isspace():
+            if self.line[self.currentChar].isspace() or self.line[self.currentChar] == '\n':
                 self.currentChar += 1
                 continue
             if self.line[self.currentChar] == '+':
@@ -107,6 +107,24 @@ class Lexer:
             if self.line[self.currentChar] == '{':
                 self.currentChar += 1
                 return Token(TokenType.TokLBrace, None)
+            # if self.line[self.currentChar] == '{':
+            #     lines_block = ""
+            #     brace_count = 1
+            #     start = self.currentChar
+            #     self.currentChar += 1
+            #     while True:
+            #         if self.line[self.currentChar] == '{':
+            #             brace_count += 1
+            #         elif self.line[self.currentChar] == '}':
+            #             brace_count -= 1
+            #             lines_block += self.line
+            #             self.line = sys.stdin.readline()
+            #             if brace_count == 0:
+            #                 self.currentChar = 0
+            #                 self.line = lines_block
+            #                 # return Token(TokenType.TokLBrace, self.line[start:self.currentChar])
+            #         self.currentChar += 1
+            #     # raise Exception("Unterminated block")
             if self.line[self.currentChar] == '}':
                 self.currentChar += 1
                 return Token(TokenType.TokRBrace, None)
@@ -181,4 +199,3 @@ class Lexer:
                     return Token(TokenType.TokOp, OpType.OpGreater)
             raise Exception(f"Invalid character: {self.line[self.currentChar]}")
         return Token(TokenType.TokEOF, None)
-

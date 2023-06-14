@@ -1,10 +1,4 @@
 var a = 2*3*5*5*7;
 var b = 3*5*11;
-while a != b {
-    if a > b {
-        a = a - b;
-    } else {
-        b = b - a;
-    }
-}
+while a != b {if a > b {a = a - b;} else {b = b - a;}}
 print a;
