@@ -4,6 +4,11 @@ class BinaryOperationNode:
         self.left = left
         self.right = right
 
+class UnaryOperationNode:
+    def __init__(self, operator, operand):
+        self.operator = operator
+        self.operand = operand
+
 class NumberNode:
     def __init__(self, value):
         self.value = value

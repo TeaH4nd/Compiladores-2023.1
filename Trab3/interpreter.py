@@ -32,6 +32,10 @@ class Interpreter:
             return node.value
         elif isinstance(node, BinaryOperationNode):
             return self.interpret_binary_operation(node)
+        elif isinstance(node, UnaryOperationNode):
+            return self.interpret_unary_operation(node)
+        else:
+            raise Exception("Invalid node type")
 
     def interpret_print(self, node):
         value = self.interpret(node.expression)
@@ -96,3 +100,12 @@ class Interpreter:
             return int(left_value or right_value)
         else:
             raise Exception(f'Operador inválido: {node.operator}')
+
+    def interpret_unary_operation(self, node):
+        operand_value = self.interpret(node.operand)
+        operator = node.operator
+
+        if operator == OpType.OpMinus:
+            return -operand_value
+        elif operator == OpType.OpNot:
+            return int(not operand_value)
