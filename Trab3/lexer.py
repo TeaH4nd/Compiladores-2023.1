@@ -16,6 +16,8 @@ class TokenType(Enum):
     TokElif = 12
     TokNome = 13
     TokSemicolon = 14
+    TokLBrace = 15
+    TokRBrace = 16
 
 class OpType(Enum):
     OpSum = 1
@@ -102,6 +104,12 @@ class Lexer:
             if self.line[self.currentChar] == ')':
                 self.currentChar += 1
                 return Token(TokenType.TokRParen, None)
+            if self.line[self.currentChar] == '{':
+                self.currentChar += 1
+                return Token(TokenType.TokLBrace, None)
+            if self.line[self.currentChar] == '}':
+                self.currentChar += 1
+                return Token(TokenType.TokRBrace, None)
             if self.line[self.currentChar] == ';':
                 self.currentChar += 1
                 return Token(TokenType.TokSemicolon, None)
