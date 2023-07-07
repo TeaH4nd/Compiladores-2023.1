@@ -48,7 +48,6 @@ class Interpreter:
                 index = self.program[self.pc]
                 self.pc += 1
                 value = self.load_variable(index)
-                self.stack.append(value)
             elif opcode == OpCode.STORE.value:
                 index = self.program[self.pc]
                 self.pc += 1
@@ -68,12 +67,12 @@ class Interpreter:
             elif opcode == OpCode.JUMP_TRUE.value:
                 offset = self.decode_argument(2)
                 value = self.pop()
-                if value != 0:
+                if value:
                     self.pc += offset
             elif opcode == OpCode.JUMP_FALSE.value:
                 offset = self.decode_argument(2)
                 value = self.pop()
-                if value == 0:
+                if not value:
                     self.pc += offset
 
     def push(self, value):
@@ -93,18 +92,6 @@ class Interpreter:
             return self.stack[self.top - 1]
         else:
             raise Exception("Pilha vazia")
-
-    # def load_variable(self, index):
-    #     if 0 <= index < len(self.stack):
-    #         return self.stack[index]
-    #     else:
-    #         raise Exception("Índice inválido para variável")
-
-    # def store_variable(self, index, value):
-    #     if 0 <= index < len(self.stack):
-    #         self.stack[index] = value
-    #     else:
-    #         raise Exception("Índice inválido para variável")
 
     def load_variable(self, index):
         if index in self.vars.keys():

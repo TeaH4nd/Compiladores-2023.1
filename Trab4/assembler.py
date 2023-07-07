@@ -23,28 +23,12 @@ class Assembler:
         else:
             raise Exception(f"Duplicate label: {label}")
 
-
     def parse(self, source_code):
         lines = source_code.split("\n")
         for line in lines:
             line = line.strip()
             if line:
                 self.parse_line(line)
-
-    # def parse_line(self, line):
-    #     line = line.strip()
-    #     if line.endswith(":"):
-    #         label = line[:-1]
-    #         self.add_label(label)
-    #         return None
-    #     elif ":" in line:
-    #         parts = line.split(":")
-    #         for part in parts[:-1]:
-    #             label = part.strip()
-    #             self.add_label(label)
-    #         line = parts[-1].strip()
-
-    #     return line
 
     def parse_line(self, line):
         if line.count(':') > 0:
@@ -54,7 +38,6 @@ class Assembler:
                 label = parts[i]
                 self.add_label(label)
             line = parts[qnd_labels:][0].strip()
-
         parts = line.split()
         if len(parts) > 1:
             inst = parts[0]
@@ -65,14 +48,13 @@ class Assembler:
         
         self.instructions.append((inst, args))
 
-
     def build_binary_code(self):
         binary_code = bytearray()
         for instruction, arg in self.instructions:
             binary_code.append(self.get_opcode(instruction))
             if arg:
                 arg_encoded = self.encode_argument(arg, instruction)
-                binary_code.extend(arg_encoded)
+                binary_code.extend(arg_encoded) # type: ignore
         return binary_code
 
     def get_opcode(self, instruction):
@@ -82,7 +64,6 @@ class Assembler:
         except KeyError:
             raise Exception(f"Instrução desconhecida: {instruction}")
 
-
     def encode_argument(self, arg, inst):
         if inst == 'NUMBER':
             num_bytes = 4
@@ -90,6 +71,9 @@ class Assembler:
             num_bytes = 1
         elif inst.startswith("JUMP"):
             num_bytes = 2
+        else:
+            num_bytes = 0
+            raise Exception(f"Instução [{inst}] não possui argumentos")
         if arg:
             if arg.isnumeric():
                 value = int(arg)
@@ -104,7 +88,6 @@ class Assembler:
                     raise Exception(f"Label '{label}' não encontrado")
             else:
                 raise Exception(f"Tipo de argumento desconhecido: {arg}")
-
 
     def backpatch(self, binary_code):
         binary_counter = 0
