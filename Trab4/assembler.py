@@ -19,7 +19,16 @@ class Assembler:
     
     def add_label(self, label):
         if label not in self.labels:
-            self.labels[label] = len(self.instructions)
+            binary_pos = 0
+            for inst in self.instructions:
+                if inst[0] == 'NUMBER':
+                    binary_pos += 4
+                elif inst[0] in ['LOAD', 'STORE']:
+                    binary_pos += 1
+                elif inst[0].startswith("JUMP"):
+                    binary_pos += 2
+                binary_pos += 1
+            self.labels[label] = binary_pos
         else:
             raise Exception(f"Duplicate label: {label}")
 
@@ -91,7 +100,7 @@ class Assembler:
 
     def backpatch(self, binary_code):
         binary_counter = 0
-        for i, (instruction, args) in enumerate(self.instructions):
+        for instruction, args in self.instructions:
             if instruction == 'NUMBER':
                 binary_counter += 4
             if instruction in ['LOAD', 'STORE']:
@@ -100,7 +109,7 @@ class Assembler:
                 label = args
                 if label in self.labels:
                     address = self.labels[label]
-                    offset = address - i
+                    offset = address - binary_counter - 1
                     binary_code[binary_counter + 1] = offset >> 8  # Byte de ordem alta do deslocamento
                     binary_code[binary_counter + 2] = offset & 0xFF  # Byte de ordem baixa do deslocamento
                     binary_counter += 2

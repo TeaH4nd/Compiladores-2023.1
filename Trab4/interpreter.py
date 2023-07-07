@@ -17,6 +17,7 @@ class Interpreter:
                 return
             elif opcode == OpCode.NUMBER.value:
                 number = self.decode_argument(4)
+                self.pc += 4
                 self.push(number)
             elif opcode == OpCode.ADD.value:
                 self.binary_operation(lambda a, b: a + b)
@@ -69,11 +70,15 @@ class Interpreter:
                 value = self.pop()
                 if value:
                     self.pc += offset
+                else:
+                    self.pc += 2
             elif opcode == OpCode.JUMP_FALSE.value:
                 offset = self.decode_argument(2)
                 value = self.pop()
                 if not value:
                     self.pc += offset
+                else:
+                    self.pc += 2
 
     def push(self, value):
         self.stack.append(value)
@@ -115,5 +120,4 @@ class Interpreter:
 
     def decode_argument(self, num_bytes):
         argument = int.from_bytes(self.program[self.pc : self.pc + num_bytes], byteorder="big", signed=True)
-        self.pc += num_bytes
         return argument
